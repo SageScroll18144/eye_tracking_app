@@ -27,7 +27,7 @@ class Analyzer():
                 if not success:
                     print("Ignoring empty camera frame.")
                     # If loading a video, use 'break' instead of 'continue'.
-                    continue
+                    break
 
                 # To improve performance, optionally mark the image as not writeable to
                 # pass by reference.
@@ -81,5 +81,5 @@ class Analyzer():
                         break
             self.cap.release()
 
-obj_analyzer = Analyzer(0)
+obj_analyzer = Analyzer("teste.webm")
 obj_analyzer.run_analyzer()
