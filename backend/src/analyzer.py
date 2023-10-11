@@ -5,6 +5,8 @@ import numpy as np
 class Analyzer():
 
     def __init__(self, video) -> None:
+        self.flag_done = False
+
         self.LEFT_IRIS = [474,475, 476, 477]
         self.RIGHT_IRIS = [469, 470, 471, 472]
         #setup
@@ -14,9 +16,14 @@ class Analyzer():
         # For webcam input:
         self.drawing_spec = self.mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
         self.cap = cv2.VideoCapture(video)
+
+        #data
+        self.left_eye_pos = list() #euclian center distance
+        self.right_eye_pos = list() #euclian center distance
     
 
     def run_analyzer(self) -> None:
+        self.flag_done = False
         with self.mp_face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
@@ -25,12 +32,10 @@ class Analyzer():
             while self.cap.isOpened():
                 success, image = self.cap.read()
                 if not success:
-                    print("Ignoring empty camera frame.")
-                    # If loading a video, use 'break' instead of 'continue'.
+                    print("\n\t*The task was done!*\n")
+                    self.flag_done = True
                     break
 
-                # To improve performance, optionally mark the image as not writeable to
-                # pass by reference.
                 image.flags.writeable = False
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 results = face_mesh.process(image)
@@ -70,10 +75,13 @@ class Analyzer():
                         center_left = np.array([l_cx, l_cy], dtype=np.int32)
                         center_right = np.array([r_cx, r_cy], dtype=np.int32)
                         
-                        print("Olho esquerdo: ", end='')
+                        print("Euclian distance from left eye: ", end='')
                         print(center_left)
-                        print("Olho direito: ", end='')
+                        print("Euclian distance from right eye: ", end='')
                         print(center_right)
+
+                        self.left_eye_pos.append(center_left)
+                        self.right_eye_pos.append(center_right)
 
                     # Flip the image horizontally for a selfie-view display.
                     cv2.imshow('MediaPipe Face Mesh', cv2.flip(image, 1))
@@ -81,5 +89,9 @@ class Analyzer():
                         break
             self.cap.release()
 
-obj_analyzer = Analyzer("teste.webm")
-obj_analyzer.run_analyzer()
+# TESTE
+# obj_analyzer = Analyzer("teste.webm")
+# obj_analyzer.run_analyzer()
+
+# if not obj_analyzer.flag_done:
+#     print("\n\t*Some problem ocurred in execution :(*\n")
