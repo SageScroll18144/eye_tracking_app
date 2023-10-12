@@ -56,10 +56,10 @@ export default function App() {
           style={{
             borderWidth: 2,
             borderRadius: 25,
-            borderColor: recording ? "blue" : "red",
+            borderColor: recording ? "red" : "blue",
             height: 10,
             width: 10,
-            backgroundColor: recording ? "blue" : "red",
+            backgroundColor: recording ? "red" : "blue",
           }}
         ></View>
       </TouchableOpacity>
