@@ -2,6 +2,9 @@ import socketserver
 import http.server
 import logging
 import cgi
+import os
+import json
+import shutil
 
 PORT = 7800
 
@@ -19,17 +22,39 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
             environ={'REQUEST_METHOD':'POST',
                      'CONTENT_TYPE':self.headers['Content-Type'],
                      })
-        for item in form.list:
-            logging.error(item)
-        http.server.SimpleHTTPRequestHandler.do_GET(self)
 
-        with open("data.txt", "w") as file:
-            for key in form.keys(): 
-                file.write(str(form.getvalue(str(key))) + ",")
+        response = {}
+
+        try:
+            mp4_file = form['mp4file']
+            text_data = form.getvalue('textdata')
+
+            print(mp4_file)
+
+            #if mp4_file:
+            mp4_file_path = os.path.join(os.getcwd(), "video.mp4")
+            logging.error("MP4 file path: %s", mp4_file_path)
+
+            with open(mp4_file_path, 'wb') as f:
+                shutil.copyfileobj(mp4_file.file, f)
+            logging.error("File saved successfully")
+
+            # Trate os dados e salve a string, se necessário
+
+            response['success'] = True
+        except Exception as e:
+            response['success'] = False
+            response['error_message'] = str(e)
+
+        # Retorne a resposta como JSON, independentemente do resultado
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode())
 
 Handler = ServerHandler
 
 httpd = socketserver.TCPServer(("", PORT), Handler)
 
-print("serving at port", PORT)
+print("Serving at port", PORT)
 httpd.serve_forever()

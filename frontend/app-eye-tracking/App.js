@@ -33,12 +33,13 @@ export default function App() {
         console.log("video", video);
 
         let formData = new FormData();
-        formData.append('file', {
-            name: video.file,
-            uri: video.uri,
-            type: 'video/mp4'
-        });
-        formData.append("id", "1234567");
+        formData.append('mp4file', {
+          name: "video.mp4", // Nome do arquivo
+          uri: video.uri,     // URI do arquivo
+          type: 'video/mp4'   // Tipo do arquivo
+      });
+        // formData.append('mp4file', video.uri, "video.mp4");
+        formData.append("textdata", "1234567");
 
         try {
             let response = await fetch(url, {
