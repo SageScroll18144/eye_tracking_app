@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "protobufjs": "^7.2.5"
+  },
+  "dependencies": {
+    "react-native-reanimated": "^3.5.4"
+  }
+}
