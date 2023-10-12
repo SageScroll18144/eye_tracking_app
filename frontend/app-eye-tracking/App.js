@@ -4,7 +4,7 @@ import { Camera } from 'expo-camera'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function App() {
-  const camRef = useRef(null);
+  const [camRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
@@ -24,14 +24,18 @@ export default function App() {
     return <Text> *Acesso negado* </Text>
   }
 
-  async function recordingCamera(){
-    if (!recording) {
-      setRecording(true);
-      let video = await camRef.recordAsync();
-      console.log("video", video);
-    } else {
-      setRecording(false);
-      camRef.stopRecording();
+  async function recordingCamera() {
+    try {
+      if (camRef && !recording) {
+        setRecording(true);
+        let video = await camRef.recordAsync({mute: true});
+        console.log("video", video);
+      } else {
+        setRecording(false);
+        camRef.stopRecording();
+      }
+    } catch (error) {
+      console.error("Erro ao gravar o vídeo:", error);
     }
   }
 
@@ -40,7 +44,9 @@ export default function App() {
       <Camera
         style={styles.images}//{flex: 1 }
         type={type}
-        ref={camRef}
+        ref={(ref) => {
+          setCameraRef(ref);
+        }}
       />
       
       <TouchableOpacity 
