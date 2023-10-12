@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Modal, Image } from 'react-native';
 import { Camera } from 'expo-camera'
-import { FontAwesome } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function App() {
   const camRef = useRef(null);
@@ -41,29 +41,23 @@ export default function App() {
         style={styles.images}//{flex: 1 }
         type={type}
         ref={camRef}
-      >
-        <View style={{flex: 1 , backgroundColor:'transparent', flexDirection:'row'}}>
-          <TouchableOpacity
-            style={{
-              position: 'absolute', 
-              bottom: 20, 
-              left: 20, 
-            
-            }}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
-              );
-            }}
-            >
-            <Text style={{fontSize: 20, marginBottom: 13, color: '#FFF'}}>Swap</Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
-          
-      <TouchableOpacity style={styles.button} onPress={ takePicture }>
-          <FontAwesome name="camera" size={23} color="#FFF" />
+      />
+      
+      <TouchableOpacity style={styles.button_record} onPress={ takePicture }>
+        <MaterialCommunityIcons name="record-circle-outline" size={40} color="black" />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button_swap}
+        onPress={() => {
+          setType(
+            type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
+          );
+        }}
+        >
+        <AntDesign name="swap" size={40} color="black" />
+      </TouchableOpacity>
+
 
       {capturedPhoto &&
         <Modal
@@ -92,20 +86,26 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-  },
-  button:{
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: 'red',
+  },
+  button_swap:{
+    position: 'absolute', 
+    bottom: 31, 
+    left: 20, 
+  },
+  button_record:{
+    justifyContent: 'center', 
+    alignItems: 'center',
     margin: 20,
     borderRadius: 20,
-    height: 50
+    width: 40,
+    height: 40,
   },
   images: {
-    width:'100%',
+    width: 400,
     height: 650, 
-    borderRadius: 20
+    borderRadius: 100,
   }
 
 });
