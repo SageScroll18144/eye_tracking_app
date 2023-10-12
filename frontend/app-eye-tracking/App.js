@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Modal, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -8,8 +7,7 @@ export default function App() {
   const camRef = useRef(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
-  const [capturedPhoto, setCapturedPhoto] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [recording, setRecording] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -26,12 +24,14 @@ export default function App() {
     return <Text> *Acesso negado* </Text>
   }
 
-  async function takePicture(){
-    if(camRef){
-      const data = await camRef.current.takePictureAsync();
-      setCapturedPhoto(data.uri);
-      setOpen(true);
-      console.log(data);
+  async function recordingCamera(){
+    if (!recording) {
+      setRecording(true);
+      let video = await camRef.recordAsync();
+      console.log("video", video);
+    } else {
+      setRecording(false);
+      camRef.stopRecording();
     }
   }
 
@@ -43,8 +43,19 @@ export default function App() {
         ref={camRef}
       />
       
-      <TouchableOpacity style={styles.button_record} onPress={ takePicture }>
+      <TouchableOpacity 
+        style={styles.button_record} onPress={ recordingCamera }>
         <MaterialCommunityIcons name="record-circle-outline" size={40} color="black" />
+        <View
+          style={{
+            borderWidth: 2,
+            borderRadius: 25,
+            borderColor: recording ? "blue" : "red",
+            height: 10,
+            width: 10,
+            backgroundColor: recording ? "blue" : "red",
+          }}
+        ></View>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -57,27 +68,6 @@ export default function App() {
         >
         <AntDesign name="swap" size={40} color="black" />
       </TouchableOpacity>
-
-
-      {capturedPhoto &&
-        <Modal
-          animationType = "slide"
-          transparent = {false}
-          visible={open}
-          >
-            <View style={{flex: 1, justifyContent: 'center', alignItems:'center', margin: 20}}>
-              <TouchableOpacity style={{margin:10}} onPress={ () => setOpen(false)}>
-                <FontAwesome name="window-close" size={50} color="red"/>
-              </TouchableOpacity>
-            
-            <Image 
-              style={styles.images}
-              source={{uri: capturedPhoto}}
-            />
-
-            </View> 
-        </Modal>
-      }
           
     </SafeAreaView >
   );
