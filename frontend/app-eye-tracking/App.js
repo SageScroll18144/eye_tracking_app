@@ -8,6 +8,7 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
+  const url = 'http://192.168.1.13:7800';
 
   useEffect(() => {
     (async () => {
@@ -30,6 +31,29 @@ export default function App() {
         setRecording(true);
         let video = await camRef.recordAsync({mute: true});
         console.log("video", video);
+
+        let formData = new FormData();
+        formData.append('file', {
+            name: video.file,
+            uri: video.uri,
+            type: 'video/mp4'
+        });
+        formData.append("id", "1234567");
+
+        try {
+            let response = await fetch(url, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                body: formData
+            });
+            return await response.json();
+        }
+        catch (error) {
+            console.log('error : ' + error);
+            return error;
+        }
       } else {
         setRecording(false);
         camRef.stopRecording();
