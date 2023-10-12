@@ -38,7 +38,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <Camera
-        style={{flex: 1 }}
+        style={styles.images}//{flex: 1 }
         type={type}
         ref={camRef}
       >
@@ -77,7 +77,7 @@ export default function App() {
               </TouchableOpacity>
             
             <Image 
-              style={{width:'100%', height: 300, borderRadius: 20}}
+              style={styles.images}
               source={{uri: capturedPhoto}}
             />
 
@@ -92,7 +92,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+
   },
   button:{
     justifyContent: 'center', 
@@ -101,5 +101,11 @@ const styles = StyleSheet.create({
     margin: 20,
     borderRadius: 20,
     height: 50
+  },
+  images: {
+    width:'100%',
+    height: 650, 
+    borderRadius: 20
   }
+
 });
