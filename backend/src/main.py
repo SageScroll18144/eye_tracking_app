@@ -17,11 +17,15 @@ while True:
 
             if not obj_analyzer.flag_done:
                 print("\n\t*Some problem ocurred in execution :(*\n")
+                state = 0
             
-            state = 2
+            if obj_analyzer.flag_done:
+                state = 2
         case 2:
             #envia para o servidor/celular
             
             os.remove("../../server/video.mp4")
             
             state = 0
+
+    print(f"state: {state}")

@@ -88,9 +88,10 @@ class Analyzer():
                     if cv2.waitKey(5) & 0xFF == 27:
                         break
             self.cap.release()
+            cv2.destroyWindow('MediaPipe Face Mesh')
 
 # TESTE
-# obj_analyzer = Analyzer("../../server/video.mp4")
+# obj_analyzer = Analyzer("teste.webm")
 # obj_analyzer.run_analyzer()
 
 # if not obj_analyzer.flag_done:
