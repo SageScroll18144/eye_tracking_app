@@ -90,7 +90,7 @@ class Analyzer():
             self.cap.release()
 
 # TESTE
-# obj_analyzer = Analyzer("teste.webm")
+# obj_analyzer = Analyzer("../../server/video.mp4")
 # obj_analyzer.run_analyzer()
 
 # if not obj_analyzer.flag_done:

@@ -33,11 +33,11 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
 
             #if mp4_file:
             mp4_file_path = os.path.join(os.getcwd(), "video.mp4")
-            logging.error("MP4 file path: %s", mp4_file_path)
+            print("MP4 file path: %s", mp4_file_path)
 
             with open(mp4_file_path, 'wb') as f:
                 shutil.copyfileobj(mp4_file.file, f)
-            logging.error("File saved successfully")
+            print("File saved successfully")
 
             # Trate os dados e salve a string, se necessário
 
