@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, Image, View, TouchableOpacity } from 'react-native';
-import { Camera } from 'expo-camera'
+import { Camera } from 'expo-camera';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Animated, Easing } from 'react-native'; // Importe Animated
 
 export default function App() {
   const [camRef, setCameraRef] = useState(null);
@@ -13,48 +12,49 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      const {status} = await Camera.requestCameraPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
 
-  if(hasPermission === null) {
-    return <View/>;
+  if (hasPermission === null) {
+    return <View />;
   }
 
-  if(hasPermission === false){
-    return <Text> *Acesso negado* </Text>
+  if (hasPermission === false) {
+    return <Text> *Acesso negado* </Text>;
   }
 
   async function recordingCamera() {
     try {
       if (camRef && !recording) {
         setRecording(true);
-        let video = await camRef.recordAsync({mute: true});
+        let video = await camRef.recordAsync({ mute: true, quality: "4:3" });
         console.log("video", video);
-
+        setRecording(false);
+        camRef.stopRecording();
         let formData = new FormData();
         formData.append('mp4file', {
           name: "video.mp4", // Nome do arquivo
-          uri: video.uri,     // URI do arquivo
-          type: 'video/mp4'   // Tipo do arquivo
-      });
+          uri: video.uri, // URI do arquivo
+          type: 'video/mp4' // Tipo do arquivo
+        });
 
         formData.append("textdata", "1234567");
 
         try {
-            let response = await fetch(url, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                body: formData
-            });
-            return await response.json();
+          let response = await fetch(url, {
+            method: 'post',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            body: formData
+          });
+          return await response.json();
         }
         catch (error) {
-            console.log('error : ' + error);
-            return error;
+          console.log('error : ' + error);
+          return error;
         }
       } else {
         setRecording(false);
@@ -64,39 +64,40 @@ export default function App() {
       console.error("Erro ao gravar o vídeo:", error);
     }
   }
+  
 
   return (
     <SafeAreaView style={styles.container}>
-    
-
-      <Camera
-        style={styles.images}
-        
-        type={type}
-        ref={(ref) => {
-          setCameraRef(ref);
-        }}
-      >
-        <Image
-          style={{
-            position: 'absolute',
-            top: 100, // coordenada y
-            left: 100, // coordenada x
-            width: 20,
-            height: 20,
-            borderRadius: 20,
-            tintColor: 'red'
-          }}
-          source={{
-            uri: 'https://placehold.it/150x150'
+      <View style={{ flex: 1 }}>
+        <Camera
+          style={styles.images}
+          type={type}
+          ref={(ref) => {
+            setCameraRef(ref);
           }}
         />
-      </Camera>
+        {recording && (
+          <Image
+            style={{
+              position: 'absolute',
+              top: 100, // coordinates
+              left: 100, // coordinates
+              width: 20,
+              height: 20,
+              borderRadius: 20,
+              tintColor: 'red',
+            }}
+            source={{
+              uri: 'https://placehold.it/150x150',
+            }}
+          />
+        )}
+      </View>
 
-      
-
-      <TouchableOpacity 
-        style={styles.button_record} onPress={ recordingCamera }>
+      <TouchableOpacity
+        style={styles.button_record}
+        onPress={recordingCamera}
+      >
         <MaterialCommunityIcons name="record-circle-outline" size={40} color="black" />
         <View
           style={{
@@ -114,30 +115,31 @@ export default function App() {
         style={styles.button_swap}
         onPress={() => {
           setType(
-            type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
+            type === Camera.Constants.Type.back
+              ? Camera.Constants.Type.front
+              : Camera.Constants.Type.back
           );
         }}
-        >
+      >
         <AntDesign name="swap" size={40} color="black" />
       </TouchableOpacity>
-          
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  button_swap:{
-    position: 'absolute', 
-    bottom: 31, 
-    left: 20, 
+  button_swap: {
+    position: 'absolute',
+    bottom: 31,
+    left: 20,
   },
-  button_record:{
-    justifyContent: 'center', 
+  button_record: {
+    justifyContent: 'center',
     alignItems: 'center',
     margin: 20,
     borderRadius: 20,
@@ -146,14 +148,13 @@ const styles = StyleSheet.create({
   },
   images: {
     width: 400,
-    height: 650, 
+    height: 650,
     borderRadius: 100,
   },
   dot: {
     marginRight: 15,
     width: 20,
     height: 20,
-    borderRadius: 20
-  }
-
+    borderRadius: 20,
+  },
 });
