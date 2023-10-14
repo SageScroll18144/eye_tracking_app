@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Animated, Easing } from 'react-native'; // Importe Animated
 
 export default function App() {
   const [camRef, setCameraRef] = useState(null);
@@ -9,6 +10,29 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
   const url = 'http://192.168.1.13:7800';
+
+  const [pointPosition, setPointPosition] = useState(new Animated.Value(0));
+
+  // Função para atualizar a posição do ponto
+  const updatePointPosition = () => {
+    Animated.loop(
+      Animated.timing(pointPosition, {
+        toValue: 10, // Altere esse valor para controlar a animação
+        duration: 1000, // Duração da animação em milissegundos
+        easing: Easing.linear, // Easing da animação
+        useNativeDriver: false, // Defina como true se possível
+      })
+    ).start();
+  };
+
+  useEffect(() => {
+    if (recording) {
+      updatePointPosition();
+    } else {
+      pointPosition.setValue(0);
+      pointPosition.stopAnimation();
+    }
+  }, [recording]);
 
   useEffect(() => {
     (async () => {
@@ -74,6 +98,22 @@ export default function App() {
         }}
       />
       
+      <Animated.View
+        style={[
+          styles.animatedPoint,
+          {
+            transform: [
+              {
+                translateX: pointPosition.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 300], // Mude para a largura desejada da tela
+                }),
+              },
+            ],
+          },
+        ]}
+      ></Animated.View>
+
       <TouchableOpacity 
         style={styles.button_record} onPress={ recordingCamera }>
         <MaterialCommunityIcons name="record-circle-outline" size={40} color="black" />
@@ -127,6 +167,13 @@ const styles = StyleSheet.create({
     width: 400,
     height: 650, 
     borderRadius: 100,
-  }
+  },
+  animatedPoint: {
+    width: 10,
+    height: 10,
+    backgroundColor: 'red', // Cor do ponto
+    position: 'absolute',
+    top: 10, // Ajuste a posição vertical do ponto conforme necessário
+  },
 
 });
