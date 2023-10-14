@@ -2,12 +2,20 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void * runner_server(void * args){
-    chdir("../server/");
+    pthread_mutex_lock(&mutex);
+    system("cd ~");
+    chdir("/home/lypess/Documentos/eye_tracking_app/server");
+    pthread_mutex_unlock(&mutex);
     system("python server_script.py");
 }
 void * runner_opencv(void * args){
-    chdir("../backend/src");
+    pthread_mutex_lock(&mutex);
+    system("cd ~");
+    chdir("/home/lypess/Documentos/eye_tracking_app//backend/src");
+    pthread_mutex_unlock(&mutex);
     system("python main.py");
 }
 
