@@ -37,10 +37,18 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
 
             with open(mp4_file_path, 'wb') as f:
                 shutil.copyfileobj(mp4_file.file, f)
-            print("File saved successfully")
+            print("File MP4 saved successfully")
 
-            # Trate os dados e salve a string, se necessário
+            # string
+            print(text_data)
 
+            text_file_path = os.path.join(os.getcwd(), "data.txt")
+
+            # Salve os dados em um arquivo de texto
+            with open(text_file_path, 'w') as text_file:
+                text_file.write(text_data)
+            print("File txt saved successfully")
+            
             response['success'] = True
         except Exception as e:
             response['success'] = False
