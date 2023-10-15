@@ -3,12 +3,38 @@ import { SafeAreaView, StyleSheet, Text, Image, View, TouchableOpacity } from 'r
 import { Camera } from 'expo-camera';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
+function sortAxisX() {
+  const idx = Math.floor(Math.random() * 3);
+  const dot_pos = [20, 180, 360];
+  return dot_pos[idx];
+}
+
+function sortAxisY() {
+  const idx = Math.floor(Math.random() * 3);
+  const dot_pos = [20, 315, 630];
+  return dot_pos[idx];
+}
+
 export default function App() {
   const [camRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
   const url = 'http://192.168.1.13:7800';
+  const [posX, setPosX] = useState(0);
+  const [posY, setPosY] = useState(0);
+
+  useEffect(() => {
+    // Inicia um intervalo que atualiza a variável 'contador' a cada 200ms
+    const interval = setInterval(() => {
+      setPosX(sortAxisX());
+      setPosY(sortAxisY());
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -80,8 +106,8 @@ export default function App() {
           <Image
             style={{
               position: 'absolute',
-              top: 100, // coordinates
-              left: 100, // coordinates
+              top: posY, // coordinates 20-630
+              left: posX, // coordinates 20-360
               width: 20,
               height: 20,
               borderRadius: 20,
@@ -150,11 +176,5 @@ const styles = StyleSheet.create({
     width: 400,
     height: 650,
     borderRadius: 100,
-  },
-  dot: {
-    marginRight: 15,
-    width: 20,
-    height: 20,
-    borderRadius: 20,
   },
 });
