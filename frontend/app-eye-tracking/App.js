@@ -23,6 +23,8 @@ export default function App() {
   const url = 'http://192.168.1.13:7800';
   const [posX, setPosX] = useState(0);
   const [posY, setPosY] = useState(0);
+  const bufferPosX = [180];
+  const bufferPosY = [315];
 
   useEffect(() => {
     // Inicia um intervalo que atualiza a variável 'contador' a cada 200ms
@@ -106,8 +108,8 @@ export default function App() {
           <Image
             style={{
               position: 'absolute',
-              top: posY, // coordinates 20-630
-              left: posX, // coordinates 20-360
+              top: posY, // Y
+              left: posX, //X
               width: 20,
               height: 20,
               borderRadius: 20,
@@ -141,9 +143,9 @@ export default function App() {
         style={styles.button_swap}
         onPress={() => {
           setType(
-            type === Camera.Constants.Type.back
+            !recording ? (type === Camera.Constants.Type.back
               ? Camera.Constants.Type.front
-              : Camera.Constants.Type.back
+              : Camera.Constants.Type.back) : type
           );
         }}
       >
