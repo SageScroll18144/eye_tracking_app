@@ -21,16 +21,14 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
   const url = 'http://192.168.1.13:7800';
-  const [posX, setPosX] = useState(0);
-  const [posY, setPosY] = useState(0);
-  const bufferPosX = [180];
-  const bufferPosY = [315];
+  const [bufferPosX, setBufferPosX] = useState([180]);
+  const [bufferPosY, setBufferPosY] = useState([315]);
 
   useEffect(() => {
     // Inicia um intervalo que atualiza a variável 'contador' a cada 200ms
     const interval = setInterval(() => {
-      setPosX(sortAxisX());
-      setPosY(sortAxisY());
+      setBufferPosX(prevBuffer => [...prevBuffer, sortAxisX()]); // Atualize o buffer com o novo valor de posX
+      setBufferPosY(prevBuffer => [...prevBuffer, sortAxisY()]); // Atualize o buffer com o novo valor de posY
     }, 2000);
 
     return () => {
@@ -56,6 +54,9 @@ export default function App() {
   async function recordingCamera() {
     try {
       if (camRef && !recording) {
+        setBufferPosX([180]);
+        setBufferPosY([315]);
+        
         setRecording(true);
         let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30});
         console.log("video", video);
@@ -108,8 +109,8 @@ export default function App() {
           <Image
             style={{
               position: 'absolute',
-              top: posY, // Y
-              left: posX, //X
+              top: bufferPosY[bufferPosY.length - 1], // Y
+              left: bufferPosX[bufferPosX.length - 1], //X
               width: 20,
               height: 20,
               borderRadius: 20,
