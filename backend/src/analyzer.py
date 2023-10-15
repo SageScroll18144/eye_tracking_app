@@ -4,7 +4,7 @@ import numpy as np
 
 class Analyzer():
 
-    def __init__(self, video) -> None:
+    def __init__(self, video, dot_quadrant) -> None:
         self.flag_done = False
 
         self.LEFT_IRIS = [474,475, 476, 477]
