@@ -29,7 +29,7 @@ export default function App() {
     try {
       if (camRef && !recording) {
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '480p', fps: 60});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();

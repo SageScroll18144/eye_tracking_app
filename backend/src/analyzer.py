@@ -15,7 +15,16 @@ class Analyzer():
         self.mp_face_mesh = mp.solutions.face_mesh
         # For webcam input:
         self.drawing_spec = self.mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
+        
         self.cap = cv2.VideoCapture(video)
+
+        desired_fps = 30
+        self.cap.set(cv2.CAP_PROP_FPS, desired_fps)
+
+        # A configuração de resolução
+        # desired_resolution = (1280, 720) 
+        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_resolution[0])
+        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_resolution[1])
 
         #data
         self.left_eye_pos = list() #euclian center distance
