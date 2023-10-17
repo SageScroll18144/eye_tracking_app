@@ -4,14 +4,14 @@ import { Camera } from 'expo-camera';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 function sortAxisX() {
-  const idx = Math.floor(Math.random() * 3);
-  const dot_pos = [20, 180, 360];
-  return dot_pos[idx];
+  const idx = Math.floor(Math.random() * 2);
+  const dot_pos = [20, 360];//180, 
+  return 180;
 }
 
 function sortAxisY() {
-  const idx = Math.floor(Math.random() * 3);
-  const dot_pos = [20, 315, 630];
+  const idx = Math.floor(Math.random() * 2);
+  const dot_pos = [20, 630]; //315,
   return dot_pos[idx];
 }
 
@@ -20,7 +20,7 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://192.168.1.13:7800';
+  const url = 'http://172.22.76.162:7800';
   const [bufferPosX, setBufferPosX] = useState([180]);
   const [bufferPosY, setBufferPosY] = useState([315]);
 
@@ -58,7 +58,7 @@ export default function App() {
         setBufferPosY([315]);
         
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 4});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();
@@ -94,6 +94,7 @@ export default function App() {
     }
   }
   
+  console.log(bufferPosX);
 
   return (
     <SafeAreaView style={styles.container}>
