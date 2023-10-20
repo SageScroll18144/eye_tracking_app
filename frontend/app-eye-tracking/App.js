@@ -40,9 +40,10 @@ export default function App() {
 
   async function recordingCamera() {
     try {
-      if (camRef && !recording) {        
+      if (camRef && !recording) {  
+        setPOSX(315);      
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 10});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 5});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();
@@ -52,8 +53,6 @@ export default function App() {
           uri: video.uri, // URI do arquivo
           type: 'video/mp4' // Tipo do arquivo
         });
-
-        formData.append("textdata", "1234567");
 
         try {
           let response = await fetch(url, {
@@ -104,22 +103,7 @@ export default function App() {
             }}
           />
         )}
-        {!recording && (
-          <Image
-            style={{
-              position: 'absolute',
-              top: 315, // Y
-              left: 180, //X
-              width: 20,
-              height: 20,
-              borderRadius: 20,
-              tintColor: 'red',
-            }}
-            source={{
-              uri: 'https://placehold.it/150x150',
-            }}
-          />
-        )}
+
       </View>
 
       <TouchableOpacity
