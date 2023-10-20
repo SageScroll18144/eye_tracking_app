@@ -3,38 +3,25 @@ import { SafeAreaView, StyleSheet, Text, Image, View, TouchableOpacity } from 'r
 import { Camera } from 'expo-camera';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
-function sortAxisX() {
-  const idx = Math.floor(Math.random() * 2);
-  const dot_pos = [20, 360];//180, 
-  return 180;
-}
-
-function sortAxisY() {
-  const idx = Math.floor(Math.random() * 2);
-  const dot_pos = [20, 630]; //315,
-  return dot_pos[idx];
-}
-
 export default function App() {
   const [camRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://172.22.76.162:7800';
-  const [bufferPosX, setBufferPosX] = useState([180]);
-  const [bufferPosY, setBufferPosY] = useState([315]);
+  const url = 'http://192.168.1.13:7800';
+  const [POSX, setPOSX] = useState(315);
 
   useEffect(() => {
-    // Inicia um intervalo que atualiza a variável 'contador' a cada 200ms
-    const interval = setInterval(() => {
-      setBufferPosX(prevBuffer => [...prevBuffer, sortAxisX()]); // Atualize o buffer com o novo valor de posX
-      setBufferPosY(prevBuffer => [...prevBuffer, sortAxisY()]); // Atualize o buffer com o novo valor de posY
-    }, 2000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    if(recording){
+      const intervalId = setInterval(() => {
+        setPOSX((POSX) => (POSX === 630 ? 20 : 630));
+      }, 2000);
+  
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [recording]);
 
   useEffect(() => {
     (async () => {
@@ -53,12 +40,9 @@ export default function App() {
 
   async function recordingCamera() {
     try {
-      if (camRef && !recording) {
-        setBufferPosX([180]);
-        setBufferPosY([315]);
-        
+      if (camRef && !recording) {        
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 4});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 10});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();
@@ -94,8 +78,6 @@ export default function App() {
     }
   }
   
-  console.log(bufferPosX);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -110,8 +92,24 @@ export default function App() {
           <Image
             style={{
               position: 'absolute',
-              top: bufferPosY[bufferPosY.length - 1], // Y
-              left: bufferPosX[bufferPosX.length - 1], //X
+              top: POSX, // Y
+              left: 180, //X
+              width: 20,
+              height: 20,
+              borderRadius: 20,
+              tintColor: 'red',
+            }}
+            source={{
+              uri: 'https://placehold.it/150x150',
+            }}
+          />
+        )}
+        {!recording && (
+          <Image
+            style={{
+              position: 'absolute',
+              top: 315, // Y
+              left: 180, //X
               width: 20,
               height: 20,
               borderRadius: 20,
