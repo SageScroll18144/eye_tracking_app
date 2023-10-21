@@ -29,8 +29,11 @@ class Analyzer():
         #data
         self.left_eye_pos = list() #euclian center distance
         self.right_eye_pos = list() #euclian center distance
-    
+        self.left_eye_time = list() #euclian center distance
+        self.right_eye_time = list() #euclian center distance
 
+        self.LEN = 0
+        
     def run_analyzer(self) -> None:
         self.flag_done = False
         with self.mp_face_mesh.FaceMesh(
@@ -85,12 +88,19 @@ class Analyzer():
                         center_right = np.array([r_cx, r_cy], dtype=np.int32)
                         
                         print("Euclian distance from left eye: ", end='')
-                        print(center_left)
+                        print(l_cx)
                         print("Euclian distance from right eye: ", end='')
-                        print(center_right)
+                        print(r_cx)
 
-                        self.left_eye_pos.append(center_left)
-                        self.right_eye_pos.append(center_right)
+                        self.left_eye_pos.append(l_cx)
+                        self.right_eye_pos.append(r_cx)
+
+                        timestamp = self.cap.get(cv2.CAP_PROP_POS_MSEC) #milliseconds
+
+                        self.left_eye_time.append(timestamp)
+                        self.right_eye_time.append(timestamp)
+
+                        self.LEN += 1
 
                     # Flip the image horizontally for a selfie-view display.
                     cv2.imshow('MediaPipe Face Mesh', cv2.flip(image, 1))
@@ -98,10 +108,20 @@ class Analyzer():
                         break
             self.cap.release()
             cv2.destroyWindow('MediaPipe Face Mesh')
+    
+    def write_data_eye(self):
+        with open("posxtime_left.txt", "w") as arquivo:
+            for x in range(self.LEN):
+                arquivo.write(f"{self.left_eye_time[x]} {self.left_eye_pos[x]}\n")
+            
+        with open("posxtime_right.txt", "w") as arquivo:
+            for x in range(self.LEN):
+                arquivo.write(f"{self.right_eye_time[x]} {self.right_eye_pos[x]}\n")
 
 # TESTE
-# obj_analyzer = Analyzer("teste.webm")
-# obj_analyzer.run_analyzer()
+obj_analyzer = Analyzer("teste.webm","")
+obj_analyzer.run_analyzer()
+obj_analyzer.write_data_eye()
 
-# if not obj_analyzer.flag_done:
-#     print("\n\t*Some problem ocurred in execution :(*\n")
+if not obj_analyzer.flag_done:
+    print("\n\t*Some problem ocurred in execution :(*\n")

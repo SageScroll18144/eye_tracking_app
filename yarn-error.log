@@ -1,0 +1,42 @@
+Arguments: 
+  /home/lypess/.nvm/versions/node/v20.1.0/bin/node /usr/share/yarn/bin/yarn.js add expo
+
+PATH: 
+  /home/lypess/.nvm/versions/node/v20.1.0/bin:/home/lypess/.cargo/bin:/home/lypess/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.1.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  AggregateError
+      at internalConnectMultiple (node:net:1103:18)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+      at internalConnectMultiple (node:net:1161:5)
+
+npm manifest: 
+  {
+    "devDependencies": {
+      "protobufjs": "^7.2.5"
+    },
+    "dependencies": {
+      "react-native-reanimated": "^3.5.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
