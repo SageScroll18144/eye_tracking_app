@@ -67,5 +67,5 @@ class Graph_exp():
         plt.show()
 
 #TESTE
-graph = Graph_exp()
-graph.make_graph()
+# graph = Graph_exp()
+# graph.make_graph()

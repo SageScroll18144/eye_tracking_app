@@ -94,6 +94,7 @@ class Analyzer():
                         
                         (l_cx, l_cy), l_radius = cv2.minEnclosingCircle(mesh_points[self.LEFT_IRIS])
                         (r_cx, r_cy), r_radius = cv2.minEnclosingCircle(mesh_points[self.RIGHT_IRIS])
+                        
                         center_left = np.array([l_cx, l_cy], dtype=np.int32)
                         center_right = np.array([r_cx, r_cy], dtype=np.int32)
                         
@@ -129,9 +130,9 @@ class Analyzer():
                 arquivo.write(f"{self.right_eye_time[x]} {self.right_eye_pos[x]}\n")
 
 # TESTE
-obj_analyzer = Analyzer("../../server/video.mp4","")
-obj_analyzer.run_analyzer()
-obj_analyzer.write_data_eye()
+# obj_analyzer = Analyzer("../../server/video.mp4","")
+# obj_analyzer.run_analyzer()
+# obj_analyzer.write_data_eye()
 
-if not obj_analyzer.flag_done:
-    print("\n\t*Some problem ocurred in execution :(*\n")
+# if not obj_analyzer.flag_done:
+#     print("\n\t*Some problem ocurred in execution :(*\n")
