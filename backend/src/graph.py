@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 
+def scale_time(time, tot_video):
+    return (time * tot_video) / 6000.0
+
 left_time = list()
 left_pos = list()
 right_time = list()
@@ -43,9 +46,9 @@ print(L)
 setpoint_time = left_time
 setpoint_pos = list()
 for x in setpoint_time:
-    if(float(x) <= 2000.0) :
+    if(float(x) <= scale_time(2000.0, setpoint_time[len(setpoint_time)-1])) :
         setpoint_pos.append(float(M))
-    elif(float(x) <= 4000.0):
+    elif(float(x) <= scale_time(4000.0, setpoint_time[len(setpoint_time)-1])):
         setpoint_pos.append(float(R))
     else:
         setpoint_pos.append(float(L))

@@ -8,7 +8,7 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://192.168.1.13:7800';
+  const url = 'http://172.22.73.204:7800';
   const [POSX, setPOSX] = useState(315);
 
   useEffect(() => {

@@ -97,13 +97,13 @@ class Analyzer():
                         center_left = np.array([l_cx, l_cy], dtype=np.int32)
                         center_right = np.array([r_cx, r_cy], dtype=np.int32)
                         
-                        print("Euclian distance from left eye: ", end='')
-                        print(l_cx)
-                        print("Euclian distance from right eye: ", end='')
-                        print(r_cx)
+                        print("Pos Y distance from left eye: ", end='')
+                        print(l_cy)
+                        print("Pos Y from right eye: ", end='')
+                        print(r_cy)
 
-                        self.left_eye_pos.append(l_cx)
-                        self.right_eye_pos.append(r_cx)
+                        self.left_eye_pos.append(l_cy)
+                        self.right_eye_pos.append(r_cy)
 
                         timestamp = self.cap.get(cv2.CAP_PROP_POS_MSEC) #milliseconds
 
@@ -129,7 +129,7 @@ class Analyzer():
                 arquivo.write(f"{self.right_eye_time[x]} {self.right_eye_pos[x]}\n")
 
 # TESTE
-obj_analyzer = Analyzer("teste.webm","")
+obj_analyzer = Analyzer("../../server/video.mp4","")
 obj_analyzer.run_analyzer()
 obj_analyzer.write_data_eye()
 
