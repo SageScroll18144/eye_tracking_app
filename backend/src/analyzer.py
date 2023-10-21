@@ -43,9 +43,19 @@ class Analyzer():
             min_tracking_confidence=0.5) as face_mesh:
             while self.cap.isOpened():
                 success, image = self.cap.read()
+
                 if not success:
                     print("\n\t*The task was done!*\n")
-                    self.flag_done = True
+                    self.flag_done = True      
+
+                    largura = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    altura = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+                    with open("sides.txt", "w") as arquivo:
+                        arquivo.write(f"{largura // 2} {altura // 2}\n") #medium point
+                        arquivo.write(f"{0} {altura // 2}\n") #left corner
+                        arquivo.write(f"{largura} {altura // 2}\n") #right corner
+
                     break
 
                 image.flags.writeable = False
