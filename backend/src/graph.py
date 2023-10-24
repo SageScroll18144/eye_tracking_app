@@ -65,7 +65,9 @@ class Graph_exp():
         plt.legend()
 
         plt.show()
+        # plt.savefig("result")
+        # plt.close()
 
 #TESTE
-# graph = Graph_exp()
-# graph.make_graph()
+graph = Graph_exp()
+graph.make_graph()

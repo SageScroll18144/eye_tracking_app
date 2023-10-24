@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, Image, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Image, View, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -8,13 +8,14 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://172.22.73.204:7800';
-  const [POSX, setPOSX] = useState(315);
-
+  const url = 'http://10.27.20.156:7800';
+  const window = useWindowDimensions();
+  const [POSX, setPOSX] = useState(window.height / 2);
+  
   useEffect(() => {
     if(recording){
       const intervalId = setInterval(() => {
-        setPOSX((POSX) => (POSX === 630 ? 20 : 630));
+        setPOSX((POSX) => (POSX === (window.height - 20) ? 4 : (window.height - 20)));
       }, 2000);
   
       return () => {
@@ -41,7 +42,7 @@ export default function App() {
   async function recordingCamera() {
     try {
       if (camRef && !recording) {  
-        setPOSX(315);      
+        setPOSX(window.height / 2);      
         setRecording(true);
         let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 5});
         console.log("video", video);
@@ -87,26 +88,27 @@ export default function App() {
             setCameraRef(ref);
           }}
         />
-        {recording && (
-          <Image
-            style={{
-              position: 'absolute',
-              top: POSX, // Y
-              left: 180, //X
-              width: 20,
-              height: 20,
-              borderRadius: 20,
-              tintColor: 'red',
-            }}
-            source={{
-              uri: 'https://placehold.it/150x150',
-            }}
-          />
-        )}
-
       </View>
-
-      <TouchableOpacity
+      {recording && (
+          <View style={styles.whiteOverlay}>
+            <Image
+              style={{
+                position: 'absolute',
+                top: POSX, // Y
+                left: 190, //X
+                width: 20,
+                height: 20,
+                borderRadius: 20,
+                tintColor: 'red',
+                backgroundColor: "white"
+              }}
+              source={{
+                uri: 'https://placehold.it/150x150',
+              }}
+            />
+          </View>
+        )}
+      {!recording && (<TouchableOpacity
         style={styles.button_record}
         onPress={recordingCamera}
       >
@@ -121,9 +123,9 @@ export default function App() {
             backgroundColor: recording ? "red" : "blue",
           }}
         ></View>
-      </TouchableOpacity>
+      </TouchableOpacity>)}
 
-      <TouchableOpacity
+      {!recording && (<TouchableOpacity
         style={styles.button_swap}
         onPress={() => {
           setType(
@@ -134,7 +136,7 @@ export default function App() {
         }}
       >
         <AntDesign name="swap" size={40} color="black" />
-      </TouchableOpacity>
+      </TouchableOpacity>)}
     </SafeAreaView>
   );
 }
@@ -162,5 +164,16 @@ const styles = StyleSheet.create({
     width: 400,
     height: 650,
     borderRadius: 100,
+    backgroundColor: 'white'
+  },
+  whiteOverlay: {
+    flex: 1,
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
   },
 });

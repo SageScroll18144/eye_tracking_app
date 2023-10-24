@@ -8,7 +8,7 @@ state = 0
 while True:
     match state:
         case 0:
-            if os.path.exists("../../server/video.mp4") and os.path.exists("../../server/data.txt"):
+            if os.path.exists("../../server/video.mp4"):
                 state = 1
             else:
                 state = 0
@@ -26,9 +26,10 @@ while True:
                 state = 2
         case 2:
             #envia para o servidor/celular
-            
+            state = 3
+
+        case 3:
             os.remove("../../server/video.mp4")
-            os.remove("../../server/data.txt")
             
             state = 0
 
