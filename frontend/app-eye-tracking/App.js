@@ -11,11 +11,12 @@ export default function App() {
   const url = 'http://10.27.20.156:7800';
   const window = useWindowDimensions();
   const [POSX, setPOSX] = useState(window.height / 2);
+  const [middleX] = useState(window.width / 2);
   
   useEffect(() => {
     if(recording){
       const intervalId = setInterval(() => {
-        setPOSX((POSX) => (POSX === (window.height - 20) ? 4 : (window.height - 20)));
+        setPOSX((POSX) => (POSX === (window.height - 10) ? 20 : (window.height - 10)));
       }, 2000);
   
       return () => {
@@ -95,7 +96,7 @@ export default function App() {
               style={{
                 position: 'absolute',
                 top: POSX, // Y
-                left: 190, //X
+                left: middleX, //X
                 width: 20,
                 height: 20,
                 borderRadius: 20,
