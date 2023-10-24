@@ -65,10 +65,11 @@ with mp_face_mesh.FaceMesh(
         center_left = np.array([l_cx, l_cy], dtype=np.int32)
         center_right = np.array([r_cx, r_cy], dtype=np.int32)
         
-        print("Olho esquerdo: ", end='')
-        print(center_left)
-        print("Olho direito: ", end='')
-        print(center_right)
+        # print("Olho esquerdo: ", end='')
+        # print(center_left)
+        # print("Olho direito: ", end='')
+        # print(center_right)
+        print(int(cap.get(cv2.CAP_PROP_FPS)))
 
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Face Mesh', cv2.flip(image, 1))
