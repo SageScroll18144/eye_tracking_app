@@ -30,6 +30,7 @@ export default function App() {
     if(recording){
       const intervalId = setInterval(() => {
         setTIME((TIME) => (TIME === 4000 ? 1000 : 4000));
+        setPOSX(window.height / 2);
       }, 11000);
   
       return () => {
@@ -58,7 +59,7 @@ export default function App() {
       if (camRef && !recording) {  
         setPOSX(window.height / 2);      
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 60, maxDuration: 15});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 60, maxDuration: 14});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();

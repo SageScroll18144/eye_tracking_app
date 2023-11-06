@@ -18,8 +18,8 @@ class Analyzer():
         
         self.cap = cv2.VideoCapture(video)
 
-        desired_fps = 30
-        self.cap.set(cv2.CAP_PROP_FPS, desired_fps)
+        # desired_fps = 30
+        # self.cap.set(cv2.CAP_PROP_FPS, desired_fps)
 
         # A configuração de resolução
         # desired_resolution = (1280, 720) 
@@ -33,7 +33,7 @@ class Analyzer():
         self.right_eye_time = list() #euclian center distance
 
         self.LEN = 0
-        
+
     def run_analyzer(self) -> None:
         self.flag_done = False
         with self.mp_face_mesh.FaceMesh(
@@ -44,12 +44,12 @@ class Analyzer():
             while self.cap.isOpened():
                 success, image = self.cap.read()
 
+                largura = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                altura = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
                 if not success:
                     print("\n\t*The task was done!*\n")
                     self.flag_done = True      
-
-                    largura = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                    altura = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
                     with open("sides.txt", "w") as arquivo:
                         arquivo.write(f"{largura // 2} {altura // 2}\n") #medium point
@@ -113,6 +113,8 @@ class Analyzer():
 
                         self.LEN += 1
 
+                        print(int(self.cap.get(cv2.CAP_PROP_FPS)))
+
                     # Flip the image horizontally for a selfie-view display.
                     cv2.imshow('MediaPipe Face Mesh', cv2.flip(image, 1))
                     if cv2.waitKey(5) & 0xFF == 27:
@@ -130,9 +132,9 @@ class Analyzer():
                 arquivo.write(f"{self.right_eye_time[x]} {self.right_eye_pos[x]}\n")
 
 # TESTE
-# obj_analyzer = Analyzer("../../server/video.mp4","")
-# obj_analyzer.run_analyzer()
-# obj_analyzer.write_data_eye()
+obj_analyzer = Analyzer("../../server/video.mp4","")
+obj_analyzer.run_analyzer()
+obj_analyzer.write_data_eye()
 
-# if not obj_analyzer.flag_done:
-#     print("\n\t*Some problem ocurred in execution :(*\n")
+if not obj_analyzer.flag_done:
+    print("\n\t*Some problem ocurred in execution :(*\n")
