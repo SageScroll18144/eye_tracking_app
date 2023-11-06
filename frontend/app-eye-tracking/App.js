@@ -13,6 +13,7 @@ export default function App() {
   const [POSX, setPOSX] = useState(window.height / 2);
   const [middleX] = useState(window.width / 2);
   const [TIME, setTIME] = useState(4000);
+  const [colorDot, setColorDot] = useState('green');
   
   useEffect(() => {
     if(recording){
@@ -31,6 +32,7 @@ export default function App() {
       const intervalId = setInterval(() => {
         setTIME((TIME) => (TIME === 4000 ? 1000 : 4000));
         setPOSX(window.height / 2);
+        //setColorDot((colorDot) => (colorDot === 'green' ? 'red' : 'green'));
       }, 11000);
   
       return () => {
@@ -57,7 +59,8 @@ export default function App() {
   async function recordingCamera() {
     try {
       if (camRef && !recording) {  
-        setPOSX(window.height / 2);      
+        setPOSX(window.height / 2);   
+        setTIME(4000);   
         setRecording(true);
         let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 60, maxDuration: 14});
         console.log("video", video);
@@ -114,7 +117,7 @@ export default function App() {
                 width: 20,
                 height: 20,
                 borderRadius: 20,
-                tintColor: 'red',
+                tintColor: 'red',//colorDot
                 backgroundColor: "white"
               }}
               source={{
