@@ -8,16 +8,29 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://10.27.20.156:7800';
+  const url = 'http://172.22.78.47:7800';
   const window = useWindowDimensions();
   const [POSX, setPOSX] = useState(window.height / 2);
   const [middleX] = useState(window.width / 2);
+  const [TIME, setTIME] = useState(4000);
   
   useEffect(() => {
     if(recording){
       const intervalId = setInterval(() => {
         setPOSX((POSX) => (POSX === (window.height - 10) ? 20 : (window.height - 10)));
-      }, 2000);
+      }, TIME);
+  
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [recording, TIME]);
+
+  useEffect(() => {
+    if(recording){
+      const intervalId = setInterval(() => {
+        setTIME((TIME) => (TIME === 4000 ? 1000 : 4000));
+      }, 11000);
   
       return () => {
         clearInterval(intervalId);
@@ -45,7 +58,7 @@ export default function App() {
       if (camRef && !recording) {  
         setPOSX(window.height / 2);      
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 5});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 60, maxDuration: 15});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();
@@ -95,7 +108,7 @@ export default function App() {
             <Image
               style={{
                 position: 'absolute',
-                top: POSX, // Y
+                top: POSX, // Y 
                 left: middleX, //X
                 width: 20,
                 height: 20,
