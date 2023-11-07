@@ -18,8 +18,8 @@ class Analyzer():
         
         self.cap = cv2.VideoCapture(video)
 
-        # desired_fps = 30
-        # self.cap.set(cv2.CAP_PROP_FPS, desired_fps)
+        desired_fps = 30
+        self.cap.set(cv2.CAP_PROP_FPS, desired_fps)
 
         # A configuração de resolução
         # desired_resolution = (1280, 720) 
@@ -33,6 +33,17 @@ class Analyzer():
         self.right_eye_time = list() #euclian center distance
 
         self.LEN = 0
+        total_frames = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        # Obter a taxa de quadros (FPS) do vídeo
+        fps = self.cap.get(cv2.CAP_PROP_FPS)
+
+        # Calcular o tempo total do vídeo em segundos
+        total_time_seconds = total_frames / fps
+
+        print(fps)
+
+        print(f"Tempo total do vídeo: {0} minutos e {total_time_seconds} segundos")
 
     def run_analyzer(self) -> None:
         self.flag_done = False
@@ -133,8 +144,8 @@ class Analyzer():
 
 # TESTE
 obj_analyzer = Analyzer("../../server/video.mp4","")
-obj_analyzer.run_analyzer()
-obj_analyzer.write_data_eye()
+#obj_analyzer.run_analyzer()
+#obj_analyzer.write_data_eye()
 
-if not obj_analyzer.flag_done:
-    print("\n\t*Some problem ocurred in execution :(*\n")
+# if not obj_analyzer.flag_done:
+#     print("\n\t*Some problem ocurred in execution :(*\n")

@@ -8,7 +8,7 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://172.22.78.47:7800';
+  const url = 'http://192.168.1.111:7800';
   const window = useWindowDimensions();
   const [POSX, setPOSX] = useState(window.height / 2);
   const [middleX] = useState(window.width / 2);
@@ -31,9 +31,9 @@ export default function App() {
     if(recording){
       const intervalId = setInterval(() => {
         setTIME((TIME) => (TIME === 4000 ? 1000 : 4000));
-        setPOSX(window.height / 2);
+        //setPOSX(window.height / 2);
         setColorDot((colorDot) => (colorDot === 'green' ? 'red' : 'green'));
-      }, 11000);
+      }, 12000);
   
       return () => {
         clearInterval(intervalId);
@@ -63,7 +63,7 @@ export default function App() {
         setTIME(4000);  
         setColorDot('green'); 
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 60, maxDuration: 14});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 14});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();
