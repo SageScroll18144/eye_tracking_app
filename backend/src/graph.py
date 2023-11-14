@@ -4,9 +4,8 @@ LEN_WIN = 16 #cm
 
 # ERRO NO ARG DO TOT_VIDEO
 
-
 def scale_time(time, tot_video):
-    return (time * tot_video) / 14000
+    return (time * tot_video) / 7000
 
 def get_length(pixels, No_PIXELS):
     return LEN_WIN * pixels / No_PIXELS
@@ -48,6 +47,7 @@ class Graph_exp():
                 linha = linha.strip().split(" ")
                 self.left_time.append(float(linha[0]))
                 self.left_pos.append(float(linha[1]))
+                self.totvideo = float(linha[2]) * 1000.0
                 # if self.init_l:
                 #     self.initial_left_pos = float(linha[1])
                 #     self.init_l = False
@@ -77,9 +77,9 @@ class Graph_exp():
     def make_points(self):
         self.setpoint_time = list()
         x = 0.0
-        while x <= 14000:
+        while x <= 7000:
             self.setpoint_time.append(x)
-            x += float(14000 / len(self.left_time))
+            x += float(7000 / len(self.left_time))
         
         print(self.setpoint_time)
 
@@ -91,38 +91,44 @@ class Graph_exp():
         cnt_LRP = 0
         cnt_LLP = 0
 
+        print(f"tot video {self.totvideo}")
+
         self.setpoint_left = list()
         for i in range(len(self.left_pos)):
-            if(self.left_time[i] >= scale_time(500.0, self.left_time[len(self.left_time)-1]) and self.left_time[i] <= scale_time(2500.0, self.left_time[len(self.left_time)-1])):
-                LMP_med += self.left_pos[i]
-                cnt_LMP += 1
-            elif(self.left_time[i] >= scale_time(4500.0, self.left_time[len(self.left_time)-1]) and self.left_time[i] <= scale_time(7500.0, self.left_time[len(self.left_time)-1])):
+        #     if(self.left_time[i] >= 500 and self.left_time[i] <= 2500):
+        #         LMP_med += self.left_pos[i]
+        #         cnt_LMP += 1
+            if(self.left_time[i] >= 4300 and self.left_time[i] <= 4800):
                 LRP_med += self.left_pos[i]
                 cnt_LRP += 1
-            elif(self.left_time[i] >= scale_time(8500.0, self.left_time[len(self.left_time)-1]) and self.left_time[i] <= scale_time(11500.0, self.left_time[len(self.left_time)-1])):
+            elif(self.left_time[i] >= 2250 and self.left_time[i] <= 3500):
                 LLP_med += self.left_pos[i]
                 cnt_LLP += 1
 
-        self.M = float(LMP_med / cnt_LMP)
+        # self.M = float(LMP_med / cnt_LMP)
         self.R = float(LRP_med / cnt_LRP)
         self.L = float(LLP_med / cnt_LLP)
 
-        print(self.R)
-        print(self.L)
+        # print(self.L)
+        # print(self.M)
+        # print(self.R)
 
         self.setpoint_pos = list()
         for x in self.setpoint_time:
-            # if(float(x) < scale_time(1000.0, self.setpoint_time[len(self.setpoint_time)-1])) :
-            #     self.setpoint_pos.append(self.M - self.M) #
-            if(float(x) < scale_time(11000.0, self.setpoint_time[len(self.setpoint_time)-1])):
-                self.setpoint_pos.append(0.0)
-            elif(float(x) < scale_time(12000.0, self.setpoint_time[len(self.setpoint_time)-1])):
+            if(float(x) < 5400.0) :
+                self.setpoint_pos.append(0.0) #
+            # elif(float(x) < 12000.0):
+            #     self.setpoint_pos.append(self.M)
+            elif(float(x) < 5900.0):
                 self.setpoint_pos.append(self.R)
-            #elif(float(x) < scale_time(16000.0, self.setpoint_time[len(self.setpoint_time)-1])):
             else:
                 self.setpoint_pos.append(self.L)
-            
+        for i in range(len(self.setpoint_pos)):
+            if(self.setpoint_pos[i] == self.L):
+                self.setpoint_time[i] = self.setpoint_time[i-1]
+                break
 
+        print(self.setpoint_time)
     def make_graph(self):
         plt.plot(self.setpoint_time, self.setpoint_pos, label='Set Point', marker='o', color='r')
         plt.plot(self.left_time, self.left_pos, label='Left eye', marker='o', color='b')

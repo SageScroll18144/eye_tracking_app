@@ -8,11 +8,11 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [hasPermission, setHasPermission] = useState(null);
   const [recording, setRecording] = useState(false);
-  const url = 'http://192.168.1.111:7800';
+  const url = 'http://192.168.1.13:7800';
   const window = useWindowDimensions();
   const [POSX, setPOSX] = useState(window.height / 2);
   const [middleX] = useState(window.width / 2);
-  const [TIME, setTIME] = useState(4000);
+  const [TIME, setTIME] = useState(2000);
   const [colorDot, setColorDot] = useState('green');
   
   useEffect(() => {
@@ -30,10 +30,10 @@ export default function App() {
   useEffect(() => {
     if(recording){
       const intervalId = setInterval(() => {
-        setTIME((TIME) => (TIME === 4000 ? 1000 : 4000));
-        //setPOSX(window.height / 2);
+        setTIME((TIME) => (TIME === 2000 ? 1000 : 2000));
+        setPOSX(window.height / 2);
         setColorDot((colorDot) => (colorDot === 'green' ? 'red' : 'green'));
-      }, 12000);
+      }, 5000);
   
       return () => {
         clearInterval(intervalId);
@@ -60,10 +60,10 @@ export default function App() {
     try {
       if (camRef && !recording) {  
         setPOSX(window.height / 2);   
-        setTIME(4000);  
+        setTIME(2000);  
         setColorDot('green'); 
         setRecording(true);
-        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 14});
+        let video = await camRef.recordAsync({ mute: true, quality: '720p', fps: 30, maxDuration: 7});
         console.log("video", video);
         setRecording(false);
         camRef.stopRecording();

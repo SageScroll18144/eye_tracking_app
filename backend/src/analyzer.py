@@ -39,11 +39,11 @@ class Analyzer():
         fps = self.cap.get(cv2.CAP_PROP_FPS)
 
         # Calcular o tempo total do vídeo em segundos
-        total_time_seconds = total_frames / fps
+        self.total_time_seconds = total_frames / fps
 
         print(fps)
 
-        print(f"Tempo total do vídeo: {0} minutos e {total_time_seconds} segundos")
+        print(f"Tempo total do vídeo: {0} minutos e {self.total_time_seconds} segundos")
 
     def run_analyzer(self) -> None:
         self.flag_done = False
@@ -135,17 +135,18 @@ class Analyzer():
     
     def write_data_eye(self):
         with open("posxtime_left.txt", "w") as arquivo:
+            print(self.left_eye_time)
             for x in range(self.LEN):
-                arquivo.write(f"{self.left_eye_time[x]} {self.left_eye_pos[x]}\n")
+                arquivo.write(f"{(self.left_eye_time[x] * (7.0 / self.total_time_seconds))} {self.left_eye_pos[x]} {self.total_time_seconds}\n")
             
         with open("posxtime_right.txt", "w") as arquivo:
             for x in range(self.LEN):
-                arquivo.write(f"{self.right_eye_time[x]} {self.right_eye_pos[x]}\n")
+                arquivo.write(f"{self.right_eye_time[x]} {self.right_eye_pos[x]} {self.total_time_seconds}\n")
 
 # TESTE
 obj_analyzer = Analyzer("../../server/video.mp4","")
-#obj_analyzer.run_analyzer()
-#obj_analyzer.write_data_eye()
+obj_analyzer.run_analyzer()
+obj_analyzer.write_data_eye()
 
-# if not obj_analyzer.flag_done:
-#     print("\n\t*Some problem ocurred in execution :(*\n")
+if not obj_analyzer.flag_done:
+    print("\n\t*Some problem ocurred in execution :(*\n")
